@@ -1,0 +1,540 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config';
+
+const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent('Hola, quisiera reservar una mesa')}`;
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(site.mapsQuery)}&output=embed`;
+---
+
+<Base title={`${site.name} | Restaurante y música en vivo en Carapongo, Chosica`}>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <!-- Único h1 de la página, siempre visible: el nombre del restaurante -->
+      <h1 class="logo">
+        <a href="/">
+          <span class="logo__small">Rinconcito</span>
+          <span class="logo__big">Huayucachino</span>
+        </a>
+      </h1>
+      <nav class="nav" aria-label="Principal">
+        <a href="#agenda">Agenda</a>
+        <a href="#casa">La casa</a>
+        <a href="#llegar">Cómo llegar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO: se reemplaza con el evento destacado cuando existe -->
+    <section class="hero" id="hero" data-state="brand">
+      <div class="hero__bg" id="hero-bg" aria-hidden="true"></div>
+
+      <div class="wrap hero__brand">
+        <p class="hero__kicker">Restaurante campestre y música en vivo en Carapongo, Lurigancho - Chosica</p>
+        <p class="stack" aria-hidden="true">
+          <span class="stack__b">Rinconcito</span>
+          <span class="stack__c">Huayucachino</span>
+        </p>
+        <p class="hero__lead">
+          Pachamanca los domingos, patasca para el frío y una tarima donde cada mes suben orquestas,
+          huaylas y cumbia del valle.
+        </p>
+        <div class="hero__actions">
+          <a class="btn" href={wa} target="_blank" rel="noopener">Reservar por WhatsApp</a>
+          <a class="btn btn--ghost" href="#agenda">Ver agenda</a>
+        </div>
+      </div>
+
+      <div class="wrap hero__event" id="hero-event" hidden>
+        <div class="hero__info">
+          <p class="hero__when" id="hero-when"></p>
+          <h2 class="hero__artist" id="hero-artist"></h2>
+          <p class="hero__title" id="hero-title"></p>
+          <p class="hero__desc" id="hero-desc"></p>
+          <div class="hero__actions">
+            <a class="btn" id="hero-cta" href={wa} target="_blank" rel="noopener">Reservar mesa</a>
+            <a class="btn btn--ghost" href="#agenda">Más fechas</a>
+          </div>
+        </div>
+        <figure class="hero__poster">
+          <img id="hero-img" alt="" />
+        </figure>
+      </div>
+    </section>
+
+    <div class="band" aria-hidden="true">
+      <div class="band__track">
+        <span>Música en vivo</span><span>Cocina huanca</span><span>Huaylas</span><span>Orquestas</span>
+        <span>Música en vivo</span><span>Cocina huanca</span><span>Huaylas</span><span>Orquestas</span>
+      </div>
+    </div>
+
+    <section class="agenda" id="agenda">
+      <div class="wrap">
+        <h2 class="section-title">Agenda de eventos</h2>
+        <ol class="dates" id="dates">
+          <li class="dates__empty">Cargando fechas…</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="casa" id="casa">
+      <div class="wrap casa__grid">
+        <div>
+          <h2 class="section-title">La casa</h2>
+          <p class="casa__text">
+            Rinconcito Huayucachino es un restaurante familiar en Carapongo, Lurigancho - Chosica. Cocinamos la sazón de Huayucachi y el valle del Mantaro
+            como en casa, con leña, y abrimos la tarima a artistas de la región para que la sobremesa se
+            vuelva fiesta.
+          </p>
+        </div>
+        <ul class="platos">
+          <li><strong>Pachamanca a la tierra</strong><span>Tres carnes, habas, humita y camote</span></li>
+          <li><strong>Patasca huanca</strong><span>Mote, mondongo y hierbabuena</span></li>
+          <li><strong>Papa a la huancaína</strong><span>Con ají amarillo y queso fresco de la zona</span></li>
+          <li><strong>Trucha frita</strong><span>De criadero andino, con papas nativas</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="llegar" id="llegar">
+      <div class="wrap llegar__grid">
+        <div>
+          <h2 class="section-title">Cómo llegar</h2>
+          <address class="llegar__addr">{site.address}</address>
+          <dl class="horario">
+            {site.hours.map((h) => (
+              <div>
+                <dt>{h.days}</dt>
+                <dd>{h.time}</dd>
+              </div>
+            ))}
+          </dl>
+          <div class="hero__actions">
+            <a class="btn" href={wa} target="_blank" rel="noopener">Escribir al {site.phoneLabel}</a>
+            <a class="btn btn--ghost" href={site.mapsUrl} target="_blank" rel="noopener">Abrir en Google Maps</a>
+          </div>
+        </div>
+        <iframe
+          class="map"
+          title={`Mapa de ${site.name}`}
+          src={mapSrc}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <p>© {new Date().getFullYear()} {site.name}</p>
+      <nav aria-label="Redes sociales" class="footer__social">
+        <a href={site.facebook} target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4 1.9-4 4.5V11H7v4h3v9h4v-9h3l.5-4H14V9c0-.6.4-1 1-1z"/></svg>
+          <span>Facebook</span>
+        </a>
+        <a href={site.instagram} target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 7.3A4.7 4.7 0 1 0 12 16.7 4.7 4.7 0 0 0 12 7.3zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm4.9-8a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0zM12 3c-2.4 0-2.7 0-3.7.1C5.7 3.2 3.2 5.7 3.1 8.3 3 9.3 3 9.6 3 12s0 2.7.1 3.7c.1 2.6 2.6 5.1 5.2 5.2 1 .1 1.3.1 3.7.1s2.7 0 3.7-.1c2.6-.1 5.1-2.6 5.2-5.2.1-1 .1-1.3.1-3.7s0-2.7-.1-3.7c-.1-2.6-2.6-5.1-5.2-5.2C14.7 3 14.4 3 12 3zm0 1.6c2.4 0 2.6 0 3.6.1 1.8.1 3.6 1.9 3.7 3.7.1 1 .1 1.2.1 3.6s0 2.6-.1 3.6c-.1 1.8-1.9 3.6-3.7 3.7-1 .1-1.2.1-3.6.1s-2.6 0-3.6-.1c-1.8-.1-3.6-1.9-3.7-3.7-.1-1-.1-1.2-.1-3.6s0-2.6.1-3.6c.1-1.8 1.9-3.6 3.7-3.7 1-.1 1.2-.1 3.6-.1z"/></svg>
+          <span>Instagram</span>
+        </a>
+        <a href={site.tiktok} target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M16.6 3h-3.3v12.4a2.8 2.8 0 1 1-2-2.7V9.3a6.1 6.1 0 1 0 5.3 6.1V9.1a7.9 7.9 0 0 0 4.4 1.4V7.2a4.5 4.5 0 0 1-4.4-4.2z"/></svg>
+          <span>TikTok</span>
+        </a>
+      </nav>
+    </div>
+  </footer>
+</Base>
+
+<script>
+  import {
+    supabase, escapeHtml, formatDay, formatMonth, formatWeekday, formatTime, formatLong,
+    type EventRow,
+  } from '../lib/supabase';
+  import { site } from '../config';
+
+  const $ = (id: string) => document.getElementById(id)!;
+
+  function renderHero(ev: EventRow) {
+    const hero = $('hero');
+    $('hero-when').textContent = formatLong(ev.event_date);
+    $('hero-artist').textContent = ev.artist;
+    $('hero-title').textContent = ev.title;
+    $('hero-desc').textContent = ev.description ?? '';
+    const msg = `Hola, quisiera reservar para ${ev.artist} (${formatLong(ev.event_date)})`;
+    ($('hero-cta') as HTMLAnchorElement).href = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
+
+    if (ev.image_url) {
+      const img = $('hero-img') as HTMLImageElement;
+      img.src = ev.image_url;
+      img.alt = `Afiche: ${ev.artist}, ${ev.title}`;
+      $('hero-bg').style.backgroundImage = `url("${ev.image_url}")`;
+    } else {
+      hero.classList.add('hero--noimg');
+    }
+
+    $('hero-event').hidden = false;
+    hero.dataset.state = 'event';
+  }
+
+  function renderDates(events: EventRow[]) {
+    const list = $('dates');
+    if (!events.length) {
+      list.innerHTML = `<li class="dates__empty">Pronto anunciamos nuevas fechas. Síguenos en redes para enterarte primero.</li>`;
+      return;
+    }
+    list.innerHTML = events.map((ev) => `
+      <li class="date">
+        <time class="date__cal" datetime="${ev.event_date}">
+          <span class="date__day">${formatDay(ev.event_date)}</span>
+          <span class="date__month">${formatMonth(ev.event_date)}</span>
+        </time>
+        <div class="date__body">
+          <h3 class="date__artist">${escapeHtml(ev.artist)}</h3>
+          <p class="date__title">${escapeHtml(ev.title)}</p>
+          <p class="date__meta">${formatWeekday(ev.event_date)}, ${formatTime(ev.event_date)}</p>
+        </div>
+        ${ev.image_url ? `<img class="date__thumb" src="${escapeHtml(ev.image_url)}" alt="" loading="lazy" />` : ''}
+      </li>`).join('');
+  }
+
+  async function load() {
+    if (!supabase) {
+      renderDates([]);
+      return;
+    }
+    // Eventos desde hace 12 h (para que el de hoy siga visible durante la noche)
+    const since = new Date(Date.now() - 12 * 3600 * 1000).toISOString();
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .gte('event_date', since)
+      .order('event_date', { ascending: true });
+
+    if (error || !data) {
+      renderDates([]);
+      return;
+    }
+    const events = data as EventRow[];
+    const featured = events.find((e) => e.is_featured);
+    if (featured) renderHero(featured);
+    renderDates(events);
+  }
+
+  load();
+</script>
+
+<style>
+  /* ---------- Barra superior ---------- */
+  .topbar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    padding-block: 18px;
+  }
+  .topbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo {
+    margin: 0;
+    font: inherit;
+  }
+  .logo a {
+    text-decoration: none;
+    display: grid;
+    line-height: 1;
+  }
+  .logo__small {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--amarillo);
+  }
+  .logo__big {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    color: var(--papel);
+  }
+  .nav { display: flex; gap: clamp(12px, 3vw, 28px); }
+  .nav a {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .nav a:hover { color: var(--amarillo); }
+  @media (max-width: 560px) {
+    .nav a:not(:first-child) { display: none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    padding-block: 110px 64px;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: -40px;
+    z-index: -1;
+    background:
+      radial-gradient(60% 50% at 85% 20%, rgba(255, 61, 154, .45), transparent 70%),
+      radial-gradient(50% 60% at 10% 90%, rgba(61, 224, 138, .25), transparent 70%),
+      var(--noche);
+    background-size: cover;
+    background-position: center;
+  }
+  .hero[data-state='event'] .hero__bg {
+    filter: blur(40px) saturate(1.4) brightness(.45);
+    transform: scale(1.1);
+  }
+  .hero[data-state='event'] .hero__brand { display: none; }
+
+  .hero__kicker {
+    color: var(--verde);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0 0 18px;
+  }
+
+  /* Nombre apilado, como letras de afiche chicha */
+  .stack {
+    margin: 0;
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+  .stack span {
+    display: inline-block;
+    padding: .08em .22em .02em;
+    line-height: 1;
+  }
+  .stack__b { background: var(--fucsia); color: var(--papel); font-size: clamp(2.6rem, 9vw, 7rem); transform: rotate(-2deg); }
+  .stack__c { background: var(--amarillo); color: var(--noche); font-size: clamp(2.1rem, 7.4vw, 5.8rem); }
+
+  .hero__lead {
+    max-width: 52ch;
+    font-size: 1.15rem;
+    color: var(--papel-dim);
+    margin: 0 0 32px;
+  }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .hero__event {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: clamp(24px, 5vw, 64px);
+    align-items: center;
+    animation: rise .8s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  .hero__event[hidden] { display: none; }
+  .hero__when {
+    display: inline-block;
+    background: var(--amarillo);
+    color: var(--noche);
+    font-weight: 800;
+    padding: .35em .75em;
+    margin: 0 0 20px;
+    font-size: 1.05rem;
+  }
+  .hero__when::first-letter { text-transform: uppercase; }
+  .hero__artist {
+    font-size: clamp(2.8rem, 8vw, 6.5rem);
+    color: var(--papel);
+    text-shadow: 4px 4px 0 var(--fucsia);
+    overflow-wrap: anywhere;
+    margin-bottom: 16px;
+  }
+  .hero__title {
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    font-weight: 800;
+    color: var(--verde);
+    margin: 0 0 12px;
+  }
+  .hero__desc {
+    color: var(--papel-dim);
+    max-width: 48ch;
+    margin: 0 0 28px;
+    white-space: pre-line;
+  }
+  .hero__poster {
+    margin: 0;
+    justify-self: end;
+    width: 100%;
+    max-width: 480px;
+    transform: rotate(2deg);
+  }
+  .hero__poster img {
+    width: 100%;
+    max-height: 78svh;
+    object-fit: contain;
+    box-shadow: 14px 14px 0 var(--fucsia), 0 30px 60px rgba(0, 0, 0, .5);
+  }
+  .hero--noimg .hero__poster { display: none; }
+  .hero--noimg .hero__event { grid-template-columns: 1fr; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 860px) {
+    .hero__event { grid-template-columns: 1fr; }
+    .hero__poster { order: -1; justify-self: center; max-width: 360px; transform: rotate(1.5deg); }
+    .hero__poster img { max-height: 55svh; }
+  }
+
+  /* ---------- Cinta ---------- */
+  .band {
+    background: var(--fucsia);
+    color: var(--noche);
+    font-family: var(--display);
+    font-size: clamp(1rem, 2.4vw, 1.5rem);
+    overflow: hidden;
+    padding-block: 12px;
+    transform: rotate(-1.2deg);
+    margin-inline: -20px;
+  }
+  .band__track {
+    display: flex;
+    gap: 2.5em;
+    width: max-content;
+    animation: slide 30s linear infinite;
+  }
+  .band__track span::after { content: '✦'; margin-left: 2.5em; color: var(--amarillo); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* ---------- Secciones ---------- */
+  .section-title {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    color: var(--amarillo);
+    margin-bottom: 32px;
+  }
+  .agenda, .casa, .llegar { padding-block: clamp(64px, 10vw, 120px); }
+
+  /* Agenda como talonario de boletos */
+  .dates {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--noche-2);
+  }
+  .dates :global(.date) {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: clamp(16px, 4vw, 40px);
+    align-items: center;
+    padding-block: 22px;
+    border-bottom: 2px dashed rgba(255, 246, 229, .18);
+  }
+  .dates :global(.date__cal) {
+    display: grid;
+    justify-items: center;
+    width: 84px;
+    padding: 10px 0 8px;
+    background: var(--papel);
+    color: var(--noche);
+    line-height: 1;
+  }
+  .dates :global(.date:nth-child(3n+1) .date__cal) { background: var(--amarillo); }
+  .dates :global(.date:nth-child(3n+2) .date__cal) { background: var(--verde); }
+  .dates :global(.date:nth-child(3n) .date__cal) { background: var(--fucsia); color: var(--papel); }
+  .dates :global(.date__day) { font-family: var(--display); font-size: 2.2rem; }
+  .dates :global(.date__month) { font-weight: 800; font-size: .95rem; }
+  .dates :global(.date__artist) { font-size: clamp(1.3rem, 3.4vw, 2.2rem); overflow-wrap: anywhere; }
+  .dates :global(.date__title) { margin: 6px 0 2px; font-weight: 600; }
+  .dates :global(.date__meta) { margin: 0; color: var(--papel-dim); font-size: .95rem; }
+  .dates :global(.date__meta::first-letter) { text-transform: uppercase; }
+  .dates :global(.date__thumb) {
+    width: 96px;
+    height: 120px;
+    object-fit: cover;
+  }
+  .dates :global(.dates__empty) {
+    padding-block: 32px;
+    color: var(--papel-dim);
+    font-size: 1.15rem;
+  }
+  @media (max-width: 600px) {
+    .dates :global(.date) { grid-template-columns: auto 1fr; }
+    .dates :global(.date__thumb) { display: none; }
+    .dates :global(.date__cal) { width: 66px; }
+    .dates :global(.date__day) { font-size: 1.7rem; }
+  }
+
+  /* La casa */
+  .casa { background: var(--papel); color: var(--noche); }
+  .casa .section-title { color: var(--fucsia); }
+  .casa__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+  }
+  .casa__text { font-size: 1.2rem; max-width: 46ch; margin: 0; }
+  .platos { list-style: none; margin: 0; padding: 0; align-self: end; }
+  .platos li {
+    display: grid;
+    padding-block: 16px;
+    border-bottom: 2px solid var(--noche);
+  }
+  .platos strong { font-size: 1.3rem; font-weight: 800; }
+  .platos span { color: #5a4a6e; }
+  @media (max-width: 760px) { .casa__grid { grid-template-columns: 1fr; } }
+
+  /* Cómo llegar */
+  .llegar__grid {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: clamp(32px, 6vw, 72px);
+    align-items: start;
+  }
+  .llegar__addr { font-style: normal; display: block; font-size: 1.25rem; font-weight: 600; margin: 0 0 24px; }
+  .horario { margin: 0 0 32px; }
+  .horario div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 10px;
+    border-bottom: 1px solid rgba(255, 246, 229, .18);
+  }
+  .horario dt { color: var(--papel-dim); }
+  .horario dd { margin: 0; font-weight: 800; }
+  .map {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 0;
+    filter: saturate(.9);
+    box-shadow: 10px 10px 0 var(--verde);
+  }
+  @media (max-width: 760px) { .llegar__grid { grid-template-columns: 1fr; } }
+
+  /* Footer */
+  .footer {
+    border-top: 2px solid var(--noche-2);
+    padding-block: 28px;
+    color: var(--papel-dim);
+    font-size: .95rem;
+  }
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .footer p { margin: 0; }
+  .footer__social { display: flex; gap: 20px; }
+  .footer__social a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .footer__social a:hover { color: var(--amarillo); }
+</style>

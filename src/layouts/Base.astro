@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import { site } from '../config';
+
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = `${site.name}: restaurante campestre en Carapongo, Lurigancho - Chosica (Lima). Comida huanca, pachamanca y patasca con música en vivo, orquestas y eventos cada mes.`,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL('/og.png', site.url).href;
+
+// Datos estructurados para Google (ficha de restaurante)
+const sameAs = [site.facebook, site.instagram, site.tiktok].filter(
+  (u) => u && !/^https:\/\/(www\.)?(facebook|instagram|tiktok)\.com\/?$/.test(u),
+);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  '@id': `${site.url}/#restaurant`,
+  name: site.name,
+  alternateName: ['Huayucachino', 'Restaurante Rinconcito Huayucachino', 'El Rinconcito Huayucachino'],
+  url: site.url,
+  hasMap: site.mapsUrl,
+  image: ogImage,
+  logo: new URL('/favicon.svg', site.url).href,
+  description,
+  telephone: `+${site.whatsapp}`,
+  servesCuisine: site.cuisine,
+  priceRange: site.priceRange,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address,
+    addressLocality: site.locality,
+    addressRegion: site.region,
+    postalCode: site.postalCode,
+    addressCountry: 'PE',
+  },
+  ...(site.geo && { geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng } }),
+  ...(sameAs.length && { sameAs }),
+};
+---
+
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1b0f2e" />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Bungee&display=swap"
+      rel="stylesheet"
+    />
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
