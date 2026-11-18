@@ -3,7 +3,7 @@ export const site = {
   // URL final del sitio (cámbiala si usas otro subdominio o un dominio propio)
   url: 'https://rinconcitohuayucachino.netlify.app',
   // Código de verificación de Google Search Console (solo el valor de content="...")
-  googleVerification: '',
+  googleVerification: '5pdopR6-Y9FDCyUyU4sEFR07p9t1qe4PvLnRH7Dz_Ys',
   name: 'Rinconcito Huayucachino',
   tagline: 'Cocina huanca, música en vivo',
   whatsapp: '51934350826', // número con código de país, sin + ni espacios
