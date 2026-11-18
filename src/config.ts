@@ -1,11 +1,13 @@
 // Datos del restaurante: edítalos aquí.
 export const site = {
   // URL final del sitio (cámbiala si usas otro subdominio o un dominio propio)
-  url: 'https://huayucachino.netlify.app',
+  url: 'https://rinconcitohuayucachino.netlify.app',
+  // Código de verificación de Google Search Console (solo el valor de content="...")
+  googleVerification: '',
   name: 'Rinconcito Huayucachino',
   tagline: 'Cocina huanca, música en vivo',
-  whatsapp: '51999999999', // número con código de país, sin + ni espacios
-  phoneLabel: '999 999 999',
+  whatsapp: '51934350826', // número con código de país, sin + ni espacios
+  phoneLabel: '+51 934 350 826',
   address: 'Av. Carapongo, Carapongo, Lurigancho - Chosica, Lima',
   locality: 'Lurigancho - Chosica',
   postalCode: '15487',
@@ -17,9 +19,14 @@ export const site = {
   mapsQuery: 'Rinconcito Huayucachino, Av. Carapongo, Lurigancho, Lima',
   mapsUrl: 'https://maps.app.goo.gl/fKhHVq2WXjEDUt4QA',
   hours: [
-    { days: 'Martes a jueves', time: '12:00 – 17:00' },
-    { days: 'Viernes y sábado', time: '12:00 – 23:00' },
-    { days: 'Domingo', time: '11:00 – 18:00' },
+    {
+      days: 'Lunes a viernes', time: '10:00 a. m. – 6:00 p. m.',
+      schema: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '10:00', closes: '18:00',
+    },
+    {
+      days: 'Sábados y domingos', time: '8:00 a. m. – 10:00 p. m.',
+      schema: ['Saturday', 'Sunday'], opens: '08:00', closes: '22:00',
+    },
   ],
   facebook: 'https://www.facebook.com/RinconcitoHuayucachinoOficial/',
   instagram: 'https://instagram.com/',

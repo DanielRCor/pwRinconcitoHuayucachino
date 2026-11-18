@@ -10,11 +10,12 @@ interface Props {
 
 const {
   title,
-  description = `${site.name}: restaurante campestre en Carapongo, Lurigancho - Chosica (Lima). Comida huanca, pachamanca y patasca con música en vivo, orquestas y eventos cada mes.`,
+  description = `${site.name}: restaurante campestre y de eventos en Carapongo, Lurigancho - Chosica (Lima). Comida huanca, pachamanca y patasca con música en vivo, orquestas y eventos cada mes.`,
   noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, site.url).href;
+const themeColor = '#1b0f2e';
 const ogImage = new URL('/og.png', site.url).href;
 
 // Datos estructurados para Google (ficha de restaurante)
@@ -44,7 +45,26 @@ const jsonLd = {
     addressCountry: 'PE',
   },
   ...(site.geo && { geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng } }),
+  openingHoursSpecification: site.hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.schema,
+    opens: h.opens,
+    closes: h.closes,
+  })),
+  acceptsReservations: true,
   ...(sameAs.length && { sameAs }),
+};
+
+// Le dice a Google que el nombre del sitio es "Rinconcito Huayucachino"
+const webSiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${site.url}/#website`,
+  name: site.name,
+  alternateName: ['Huayucachino', 'El Rinconcito Huayucachino'],
+  url: `${site.url}/`,
+  inLanguage: 'es-PE',
+  publisher: { '@id': `${site.url}/#restaurant` },
 };
 ---
 
@@ -55,7 +75,7 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#1b0f2e" />
+    <meta name="theme-color" content={themeColor} />
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
 
     <meta property="og:type" content="website" />
@@ -78,7 +98,8 @@ const jsonLd = {
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Bungee&display=swap"
       rel="stylesheet"
     />
-    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify([webSiteLd, jsonLd])} />}
   </head>
   <body>
     <slot />

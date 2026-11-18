@@ -44,3 +44,22 @@ export function formatLong(iso: string) {
 export function escapeHtml(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 }
+
+export type DishRow = {
+  id: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  position: number;
+  is_published: boolean;
+  created_at: string;
+};
+
+export type ContentKey = 'casa_title' | 'casa_text';
+
+export function storagePathFromUrl(url: string | null) {
+  if (!url) return null;
+  const marker = `/${BUCKET}/`;
+  const i = url.indexOf(marker);
+  return i === -1 ? null : url.slice(i + marker.length);
+}

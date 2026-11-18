@@ -13,7 +13,7 @@ import Base from '../../layouts/Base.astro';
     <!-- Login -->
     <section class="card center login" id="view-login" hidden>
       <a href="/" class="back">Volver a la web</a>
-      <h1>Panel de eventos</h1>
+      <h1>Panel Rinconcito</h1>
       <form id="login-form" class="form">
         <label>Correo
           <input type="email" name="email" autocomplete="username" required />
@@ -21,7 +21,7 @@ import Base from '../../layouts/Base.astro';
         <label>Contraseña
           <input type="password" name="password" autocomplete="current-password" required />
         </label>
-        <p class="msg" id="login-msg" role="alert"></p>
+        <p class="msg msg--error" id="login-msg" role="alert"></p>
         <button class="btn" type="submit">Entrar</button>
       </form>
     </section>
@@ -29,26 +29,33 @@ import Base from '../../layouts/Base.astro';
     <!-- Panel -->
     <section id="view-panel" hidden>
       <header class="bar">
-        <h1>Eventos</h1>
+        <h1>Panel Rinconcito</h1>
         <div class="bar__right">
           <a href="/" target="_blank" rel="noopener">Ver web</a>
           <button class="link" id="logout">Cerrar sesión</button>
         </div>
       </header>
 
-      <div class="grid">
+      <nav class="tabs" role="tablist" aria-label="Secciones del panel">
+        <button role="tab" class="tab" data-tab="eventos" aria-selected="true">Eventos</button>
+        <button role="tab" class="tab" data-tab="casa" aria-selected="false">La casa</button>
+        <button role="tab" class="tab" data-tab="platos" aria-selected="false">Platos</button>
+      </nav>
+
+      <!-- ===== Eventos ===== -->
+      <div class="panel grid" data-panel="eventos">
         <form id="event-form" class="card form">
-          <h2 id="form-title">Nuevo evento</h2>
+          <h2 id="ev-form-title">Nuevo evento</h2>
           <input type="hidden" name="id" />
 
-          <label class="drop" id="drop">
-            <input type="file" name="image" accept="image/*" id="image-input" />
-            <img id="preview" alt="Vista previa del afiche" hidden />
-            <span id="drop-text">Sube el afiche o una foto grande del artista (vertical o horizontal)</span>
+          <label class="drop">
+            <input type="file" name="image" accept="image/*" data-preview="ev-preview" />
+            <img id="ev-preview" alt="Vista previa del afiche" hidden />
+            <span>Sube el afiche o una foto grande del artista (vertical u horizontal)</span>
           </label>
 
           <label>Artista o agrupación
-            <input name="artist" required maxlength="120" placeholder="Ej. Orquesta Los Gorriones del Mantaro" />
+            <input name="artist" required maxlength="120" placeholder="Ej. Orquesta Juventud Huanca" />
           </label>
           <label>Nombre del evento
             <input name="title" required maxlength="160" placeholder="Ej. Noche de huaylas" />
@@ -69,16 +76,72 @@ import Base from '../../layouts/Base.astro';
             <span>Publicado (visible en la web)</span>
           </label>
 
-          <p class="msg" id="form-msg" role="status"></p>
+          <p class="msg" id="ev-msg" role="status"></p>
           <div class="actions">
-            <button class="btn" type="submit" id="save">Publicar evento</button>
-            <button class="btn btn--ghost" type="button" id="cancel" hidden>Cancelar edición</button>
+            <button class="btn" type="submit" id="ev-save">Publicar evento</button>
+            <button class="btn btn--ghost" type="button" id="ev-cancel" hidden>Cancelar edición</button>
           </div>
         </form>
 
         <div>
           <h2 class="list-title">Fechas cargadas</h2>
-          <ul class="list" id="list"></ul>
+          <ul class="list" id="ev-list"></ul>
+        </div>
+      </div>
+
+      <!-- ===== La casa ===== -->
+      <div class="panel" data-panel="casa" hidden>
+        <form id="casa-form" class="card form casa-form">
+          <h2>Texto de la sección "La casa"</h2>
+          <label>Título
+            <input name="casa_title" required maxlength="60" placeholder="La casa" />
+          </label>
+          <label>Descripción
+            <textarea name="casa_text" rows="7" required maxlength="1200"></textarea>
+          </label>
+          <p class="msg" id="casa-msg" role="status"></p>
+          <div class="actions">
+            <button class="btn" type="submit">Guardar texto</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ===== Platos ===== -->
+      <div class="panel grid" data-panel="platos" hidden>
+        <form id="dish-form" class="card form">
+          <h2 id="dish-form-title">Nuevo plato</h2>
+          <input type="hidden" name="id" />
+
+          <label class="drop">
+            <input type="file" name="image" accept="image/*" data-preview="dish-preview" />
+            <img id="dish-preview" alt="Vista previa del plato" hidden />
+            <span>Sube la foto del plato (mejor vertical)</span>
+          </label>
+
+          <label>Nombre del plato
+            <input name="name" required maxlength="80" placeholder="Ej. Pachamanca a la tierra" />
+          </label>
+          <label>Descripción (opcional)
+            <textarea name="description" rows="3" maxlength="300" placeholder="Ej. Tres carnes, habas, humita y camote"></textarea>
+          </label>
+          <label>Orden en el carrusel
+            <input type="number" name="position" min="0" step="1" value="0" />
+          </label>
+          <label class="check">
+            <input type="checkbox" name="is_published" checked />
+            <span>Mostrar en la web</span>
+          </label>
+
+          <p class="msg" id="dish-msg" role="status"></p>
+          <div class="actions">
+            <button class="btn" type="submit" id="dish-save">Agregar plato</button>
+            <button class="btn btn--ghost" type="button" id="dish-cancel" hidden>Cancelar edición</button>
+          </div>
+        </form>
+
+        <div>
+          <h2 class="list-title">Platos del carrusel</h2>
+          <ul class="list" id="dish-list"></ul>
         </div>
       </div>
     </section>
@@ -86,39 +149,93 @@ import Base from '../../layouts/Base.astro';
 </Base>
 
 <script>
-  import { supabase, isConfigured, BUCKET, formatLong, escapeHtml, type EventRow } from '../../lib/supabase';
+  import {
+    supabase, isConfigured, BUCKET, formatLong, escapeHtml, storagePathFromUrl,
+    type EventRow, type DishRow,
+  } from '../../lib/supabase';
 
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const views = ['view-config', 'view-login', 'view-panel'];
   const show = (id: string) => views.forEach((v) => ($(v).hidden = v !== id));
 
-  const form = $<HTMLFormElement>('event-form');
-  const preview = $<HTMLImageElement>('preview');
-  const formMsg = $('form-msg');
+  /* ---------- Utilidades de imágenes ---------- */
+  async function uploadImage(file: File, folder: string) {
+    if (file.size > 8 * 1024 * 1024) throw new Error('La imagen pesa más de 8 MB. Usa una más liviana.');
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase!.storage.from(BUCKET).upload(path, file, { cacheControl: '31536000', contentType: file.type });
+    if (error) throw error;
+    return supabase!.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  }
+
+  async function removeImage(url: string | null) {
+    const path = storagePathFromUrl(url);
+    if (path) await supabase!.storage.from(BUCKET).remove([path]);
+  }
+
+  function setPreview(imgId: string, url: string | null) {
+    const img = $<HTMLImageElement>(imgId);
+    const hint = img.nextElementSibling as HTMLElement;
+    if (url) {
+      img.src = url;
+      img.hidden = false;
+      hint.hidden = true;
+    } else {
+      img.removeAttribute('src');
+      img.hidden = true;
+      hint.hidden = false;
+    }
+  }
+
+  document.querySelectorAll<HTMLInputElement>('input[data-preview]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const file = input.files?.[0];
+      if (file) setPreview(input.dataset.preview!, URL.createObjectURL(file));
+    });
+  });
+
+  async function withBusy(btn: HTMLButtonElement, fn: () => Promise<void>) {
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Guardando…';
+    try {
+      await fn();
+    } finally {
+      btn.disabled = false;
+      if (btn.textContent === 'Guardando…') btn.textContent = label;
+    }
+  }
+
+  /* ---------- Pestañas ---------- */
+  document.querySelectorAll<HTMLButtonElement>('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+      document.querySelectorAll<HTMLElement>('.panel').forEach((p) => (p.hidden = p.dataset.panel !== tab.dataset.tab));
+    });
+  });
+
+  /* ===================== EVENTOS ===================== */
+  const evForm = $<HTMLFormElement>('event-form');
   let events: EventRow[] = [];
-  let currentImageUrl: string | null = null;
+  let evImageUrl: string | null = null;
 
   function toLocalInput(iso: string) {
     const d = new Date(iso);
-    const off = d.getTimezoneOffset();
-    return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
   }
 
-  function resetForm() {
-    form.reset();
-    (form.elements.namedItem('id') as HTMLInputElement).value = '';
-    currentImageUrl = null;
-    preview.hidden = true;
-    preview.removeAttribute('src');
-    $('drop-text').hidden = false;
-    $('form-title').textContent = 'Nuevo evento';
-    $('save').textContent = 'Publicar evento';
-    $('cancel').hidden = true;
-    formMsg.textContent = '';
+  function resetEvForm() {
+    evForm.reset();
+    (evForm.elements.namedItem('id') as HTMLInputElement).value = '';
+    evImageUrl = null;
+    setPreview('ev-preview', null);
+    $('ev-form-title').textContent = 'Nuevo evento';
+    $('ev-save').textContent = 'Publicar evento';
+    $('ev-cancel').hidden = true;
   }
 
   function editEvent(ev: EventRow) {
-    const f = form.elements as any;
+    const f = evForm.elements as any;
     f.id.value = ev.id;
     f.artist.value = ev.artist;
     f.title.value = ev.title;
@@ -126,20 +243,17 @@ import Base from '../../layouts/Base.astro';
     f.event_date.value = toLocalInput(ev.event_date);
     f.is_featured.checked = ev.is_featured;
     f.is_published.checked = ev.is_published;
-    currentImageUrl = ev.image_url;
-    if (ev.image_url) {
-      preview.src = ev.image_url;
-      preview.hidden = false;
-      $('drop-text').hidden = true;
-    }
-    $('form-title').textContent = 'Editar evento';
-    $('save').textContent = 'Guardar cambios';
-    $('cancel').hidden = false;
-    form.scrollIntoView({ behavior: 'smooth' });
+    evImageUrl = ev.image_url;
+    setPreview('ev-preview', ev.image_url);
+    $('ev-form-title').textContent = 'Editar evento';
+    $('ev-save').textContent = 'Guardar cambios';
+    $('ev-cancel').hidden = false;
+    $('ev-msg').textContent = '';
+    evForm.scrollIntoView({ behavior: 'smooth' });
   }
 
-  function renderList() {
-    const list = $('list');
+  function renderEvents() {
+    const list = $('ev-list');
     if (!events.length) {
       list.innerHTML = '<li class="empty">Aún no hay eventos. Crea el primero con el formulario.</li>';
       return;
@@ -171,39 +285,232 @@ import Base from '../../layouts/Base.astro';
   async function loadEvents() {
     const { data, error } = await supabase!.from('events').select('*').order('event_date', { ascending: false });
     if (error) {
-      $('list').innerHTML = `<li class="empty">No se pudieron cargar los eventos: ${escapeHtml(error.message)}</li>`;
+      $('ev-list').innerHTML = `<li class="empty">No se pudieron cargar los eventos: ${escapeHtml(error.message)}</li>`;
       return;
     }
     events = data as EventRow[];
-    renderList();
+    renderEvents();
   }
 
-  async function uploadImage(file: File) {
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await supabase!.storage.from(BUCKET).upload(path, file, { cacheControl: '31536000', contentType: file.type });
-    if (error) throw error;
-    return supabase!.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  $('ev-cancel').addEventListener('click', () => { resetEvForm(); $('ev-msg').textContent = ''; });
+
+  evForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = evForm.elements as any;
+    $('ev-msg').textContent = '';
+    withBusy($<HTMLButtonElement>('ev-save'), async () => {
+      try {
+        const file: File | undefined = f.image.files?.[0];
+        let image_url = evImageUrl;
+        if (file) {
+          image_url = await uploadImage(file, 'eventos');
+          if (evImageUrl) await removeImage(evImageUrl);
+        }
+        const row = {
+          artist: f.artist.value.trim(),
+          title: f.title.value.trim(),
+          description: f.description.value.trim() || null,
+          event_date: new Date(f.event_date.value).toISOString(),
+          is_featured: f.is_featured.checked,
+          is_published: f.is_published.checked,
+          image_url,
+        };
+        // Solo un evento puede estar en portada
+        if (row.is_featured) {
+          await supabase!.from('events').update({ is_featured: false }).eq('is_featured', true);
+        }
+        const id = f.id.value;
+        const { error } = id
+          ? await supabase!.from('events').update(row).eq('id', id)
+          : await supabase!.from('events').insert(row);
+        if (error) throw error;
+        resetEvForm();
+        $('ev-msg').textContent = id ? 'Cambios guardados.' : 'Evento publicado.';
+        await loadEvents();
+      } catch (err: any) {
+        $('ev-msg').textContent = `No se guardó: ${err.message ?? err}`;
+      }
+    });
+  });
+
+  $('ev-list').addEventListener('click', async (e) => {
+    const t = e.target as HTMLElement;
+    if (t.dataset.edit) {
+      const ev = events.find((x) => x.id === t.dataset.edit);
+      if (ev) editEvent(ev);
+    }
+    if (t.dataset.del) {
+      const ev = events.find((x) => x.id === t.dataset.del);
+      if (!ev || !confirm(`¿Eliminar "${ev.artist} – ${ev.title}"? No se puede deshacer.`)) return;
+      const { error } = await supabase!.from('events').delete().eq('id', ev.id);
+      if (error) return alert(`No se eliminó: ${error.message}`);
+      await removeImage(ev.image_url);
+      await loadEvents();
+    }
+  });
+
+  /* ===================== LA CASA ===================== */
+  const casaForm = $<HTMLFormElement>('casa-form');
+
+  async function loadCasa() {
+    const { data, error } = await supabase!.from('site_content').select('key,value');
+    if (error) {
+      $('casa-msg').textContent = `No se pudo cargar el texto: ${error.message}. ¿Ejecutaste supabase/002_casa_platos.sql?`;
+      return;
+    }
+    const f = casaForm.elements as any;
+    for (const row of data ?? []) {
+      if (row.key === 'casa_title') f.casa_title.value = row.value;
+      if (row.key === 'casa_text') f.casa_text.value = row.value;
+    }
   }
 
-  async function removeImage(url: string | null) {
-    if (!url) return;
-    const marker = `/${BUCKET}/`;
-    const i = url.indexOf(marker);
-    if (i === -1) return;
-    await supabase!.storage.from(BUCKET).remove([url.slice(i + marker.length)]);
+  casaForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = casaForm.elements as any;
+    $('casa-msg').textContent = '';
+    withBusy(casaForm.querySelector('button[type="submit"]') as HTMLButtonElement, async () => {
+      const now = new Date().toISOString();
+      const { error } = await supabase!.from('site_content').upsert([
+        { key: 'casa_title', value: f.casa_title.value.trim(), updated_at: now },
+        { key: 'casa_text', value: f.casa_text.value.trim(), updated_at: now },
+      ]);
+      $('casa-msg').textContent = error ? `No se guardó: ${error.message}` : 'Texto guardado. Ya se ve en la web.';
+    });
+  });
+
+  /* ===================== PLATOS ===================== */
+  const dishForm = $<HTMLFormElement>('dish-form');
+  let dishes: DishRow[] = [];
+  let dishImageUrl: string | null = null;
+
+  function resetDishForm() {
+    dishForm.reset();
+    (dishForm.elements.namedItem('id') as HTMLInputElement).value = '';
+    (dishForm.elements.namedItem('position') as HTMLInputElement).value = String(dishes.length);
+    dishImageUrl = null;
+    setPreview('dish-preview', null);
+    $('dish-form-title').textContent = 'Nuevo plato';
+    $('dish-save').textContent = 'Agregar plato';
+    $('dish-cancel').hidden = true;
+  }
+
+  function editDish(d: DishRow) {
+    const f = dishForm.elements as any;
+    f.id.value = d.id;
+    f.name.value = d.name;
+    f.description.value = d.description ?? '';
+    f.position.value = d.position;
+    f.is_published.checked = d.is_published;
+    dishImageUrl = d.image_url;
+    setPreview('dish-preview', d.image_url);
+    $('dish-form-title').textContent = 'Editar plato';
+    $('dish-save').textContent = 'Guardar cambios';
+    $('dish-cancel').hidden = false;
+    $('dish-msg').textContent = '';
+    dishForm.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function renderDishes() {
+    const list = $('dish-list');
+    if (!dishes.length) {
+      list.innerHTML = '<li class="empty">Aún no hay platos. Mientras tanto la web muestra 4 platos de ejemplo.</li>';
+      return;
+    }
+    list.innerHTML = dishes.map((d) => `
+      <li class="item ${d.is_published ? '' : 'item--past'}">
+        ${d.image_url ? `<img src="${escapeHtml(d.image_url)}" alt="" />` : '<div class="noimg"></div>'}
+        <div class="item__body">
+          <strong>${escapeHtml(d.name)}</strong>
+          ${d.description ? `<span>${escapeHtml(d.description)}</span>` : ''}
+          <small>Orden ${d.position}</small>
+          <div class="tags">${d.is_published ? '' : '<em class="tag">Oculto</em>'}</div>
+        </div>
+        <div class="item__actions">
+          <button class="link" data-edit="${d.id}">Editar</button>
+          <button class="link danger" data-del="${d.id}">Eliminar</button>
+        </div>
+      </li>`).join('');
+  }
+
+  async function loadDishes() {
+    const { data, error } = await supabase!.from('dishes').select('*').order('position').order('created_at');
+    if (error) {
+      $('dish-list').innerHTML = `<li class="empty">No se pudieron cargar los platos: ${escapeHtml(error.message)}. ¿Ejecutaste supabase/002_casa_platos.sql?</li>`;
+      return;
+    }
+    dishes = data as DishRow[];
+    renderDishes();
+    if (!(dishForm.elements.namedItem('id') as HTMLInputElement).value) {
+      (dishForm.elements.namedItem('position') as HTMLInputElement).value = String(dishes.length);
+    }
+  }
+
+  $('dish-cancel').addEventListener('click', () => { resetDishForm(); $('dish-msg').textContent = ''; });
+
+  dishForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = dishForm.elements as any;
+    $('dish-msg').textContent = '';
+    withBusy($<HTMLButtonElement>('dish-save'), async () => {
+      try {
+        const file: File | undefined = f.image.files?.[0];
+        let image_url = dishImageUrl;
+        if (file) {
+          image_url = await uploadImage(file, 'platos');
+          if (dishImageUrl) await removeImage(dishImageUrl);
+        }
+        const row = {
+          name: f.name.value.trim(),
+          description: f.description.value.trim() || null,
+          position: Number(f.position.value) || 0,
+          is_published: f.is_published.checked,
+          image_url,
+        };
+        const id = f.id.value;
+        const { error } = id
+          ? await supabase!.from('dishes').update(row).eq('id', id)
+          : await supabase!.from('dishes').insert(row);
+        if (error) throw error;
+        await loadDishes();
+        resetDishForm();
+        $('dish-msg').textContent = id ? 'Cambios guardados.' : 'Plato agregado.';
+      } catch (err: any) {
+        $('dish-msg').textContent = `No se guardó: ${err.message ?? err}`;
+      }
+    });
+  });
+
+  $('dish-list').addEventListener('click', async (e) => {
+    const t = e.target as HTMLElement;
+    if (t.dataset.edit) {
+      const d = dishes.find((x) => x.id === t.dataset.edit);
+      if (d) editDish(d);
+    }
+    if (t.dataset.del) {
+      const d = dishes.find((x) => x.id === t.dataset.del);
+      if (!d || !confirm(`¿Eliminar "${d.name}"? No se puede deshacer.`)) return;
+      const { error } = await supabase!.from('dishes').delete().eq('id', d.id);
+      if (error) return alert(`No se eliminó: ${error.message}`);
+      await removeImage(d.image_url);
+      await loadDishes();
+    }
+  });
+
+  /* ===================== INICIO ===================== */
+  function enterPanel() {
+    show('view-panel');
+    loadEvents();
+    loadCasa();
+    loadDishes();
   }
 
   async function init() {
     if (!isConfigured || !supabase) return show('view-config');
 
     const { data } = await supabase.auth.getSession();
-    if (data.session) {
-      show('view-panel');
-      loadEvents();
-    } else {
-      show('view-login');
-    }
+    if (data.session) enterPanel();
+    else show('view-login');
 
     $<HTMLFormElement>('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -217,92 +524,12 @@ import Base from '../../layouts/Base.astro';
         $('login-msg').textContent = 'Correo o contraseña incorrectos. Revisa los datos e inténtalo otra vez.';
         return;
       }
-      show('view-panel');
-      loadEvents();
+      enterPanel();
     });
 
     $('logout').addEventListener('click', async () => {
       await supabase.auth.signOut();
       show('view-login');
-    });
-
-    $<HTMLInputElement>('image-input').addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      preview.src = URL.createObjectURL(file);
-      preview.hidden = false;
-      $('drop-text').hidden = true;
-    });
-
-    $('cancel').addEventListener('click', resetForm);
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const f = form.elements as any;
-      const btn = $<HTMLButtonElement>('save');
-      const label = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Guardando…';
-      formMsg.textContent = '';
-
-      try {
-        const file: File | undefined = f.image.files?.[0];
-        if (file && file.size > 8 * 1024 * 1024) throw new Error('La imagen pesa más de 8 MB. Usa una más liviana.');
-
-        let image_url = currentImageUrl;
-        if (file) {
-          image_url = await uploadImage(file);
-          if (currentImageUrl) await removeImage(currentImageUrl);
-        }
-
-        const row = {
-          artist: f.artist.value.trim(),
-          title: f.title.value.trim(),
-          description: f.description.value.trim() || null,
-          event_date: new Date(f.event_date.value).toISOString(),
-          is_featured: f.is_featured.checked,
-          is_published: f.is_published.checked,
-          image_url,
-        };
-
-        // Solo un evento puede estar en portada
-        if (row.is_featured) {
-          await supabase.from('events').update({ is_featured: false }).eq('is_featured', true);
-        }
-
-        const id = f.id.value;
-        const { error } = id
-          ? await supabase.from('events').update(row).eq('id', id)
-          : await supabase.from('events').insert(row);
-        if (error) throw error;
-
-        resetForm();
-        formMsg.textContent = id ? 'Cambios guardados.' : 'Evento publicado.';
-        await loadEvents();
-      } catch (err: any) {
-        formMsg.textContent = `No se guardó: ${err.message ?? err}`;
-      } finally {
-        btn.disabled = false;
-        if (btn.textContent === 'Guardando…') btn.textContent = label;
-      }
-    });
-
-    $('list').addEventListener('click', async (e) => {
-      const t = e.target as HTMLElement;
-      const editId = t.dataset.edit;
-      const delId = t.dataset.del;
-      if (editId) {
-        const ev = events.find((x) => x.id === editId);
-        if (ev) editEvent(ev);
-      }
-      if (delId) {
-        const ev = events.find((x) => x.id === delId);
-        if (!ev || !confirm(`¿Eliminar "${ev.artist} – ${ev.title}"? No se puede deshacer.`)) return;
-        const { error } = await supabase.from('events').delete().eq('id', delId);
-        if (error) return alert(`No se eliminó: ${error.message}`);
-        await removeImage(ev.image_url);
-        await loadEvents();
-      }
     });
   }
 
@@ -310,18 +537,10 @@ import Base from '../../layouts/Base.astro';
 </script>
 
 <style>
-  .admin {
-    max-width: 1200px;
-    margin-inline: auto;
-    padding: 24px var(--gutter) 64px;
-  }
+  .admin { max-width: 1200px; margin-inline: auto; padding: 24px var(--gutter) 64px; }
   h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--amarillo); }
   h2 { font-size: 1.3rem; margin-bottom: 8px; }
-  .card {
-    background: var(--noche-2);
-    padding: clamp(20px, 4vw, 32px);
-    border-radius: 6px;
-  }
+  .card { background: var(--noche-2); padding: clamp(20px, 4vw, 32px); border-radius: 6px; }
   .center { max-width: 440px; margin: 10vh auto 0; }
   .login h1 { margin-block: 12px 24px; }
   .back { color: var(--papel-dim); font-size: .95rem; }
@@ -348,7 +567,7 @@ import Base from '../../layouts/Base.astro';
     display: grid !important;
     place-items: center;
     min-height: 200px;
-    border: 2px dashed var(--fucsia) !important;
+    border: 2px dashed var(--fucsia);
     border-radius: 6px;
     padding: 16px;
     text-align: center;
@@ -360,38 +579,33 @@ import Base from '../../layouts/Base.astro';
   .drop:focus-within { outline: 3px solid var(--amarillo); outline-offset: 3px; }
 
   .msg { margin: 0; min-height: 1.4em; color: var(--verde); }
-  #login-msg { color: var(--fucsia); }
+  .msg--error { color: var(--fucsia); }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .btn:disabled { opacity: .6; cursor: wait; }
 
-  .bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
   .bar__right { display: flex; gap: 20px; align-items: center; }
-  .link {
-    background: none;
-    border: 0;
-    padding: 0;
-    font: inherit;
-    font-weight: 600;
-    color: var(--papel);
-    text-decoration: underline;
-    cursor: pointer;
-  }
+  .link { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--papel); text-decoration: underline; cursor: pointer; }
   .danger { color: var(--fucsia); }
 
-  .grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 32px;
-    align-items: start;
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .tab {
+    font-family: var(--display);
+    font-size: 1rem;
+    color: var(--papel);
+    background: transparent;
+    border: 0;
+    box-shadow: inset 0 0 0 2px rgba(255, 246, 229, .3);
+    border-radius: 999px;
+    padding: .7em 1.3em;
+    cursor: pointer;
   }
+  .tab[aria-selected='true'] { background: var(--amarillo); color: var(--noche); box-shadow: none; }
+
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+  .grid[hidden] { display: none; }
   @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .casa-form { max-width: 720px; }
 
   .list-title { margin-bottom: 12px; }
   .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -405,18 +619,13 @@ import Base from '../../layouts/Base.astro';
     border-radius: 6px;
   }
   .list :global(.item--past) { opacity: .55; }
-  .list :global(.item img), .list :global(.noimg) {
-    width: 64px; height: 80px; object-fit: cover; background: var(--noche); border-radius: 3px;
-  }
+  .list :global(.item img), .list :global(.noimg) { width: 64px; height: 80px; object-fit: cover; background: var(--noche); border-radius: 3px; }
   .list :global(.item__body) { display: grid; gap: 2px; min-width: 0; }
   .list :global(.item__body strong) { overflow-wrap: anywhere; }
   .list :global(.item__body small) { color: var(--papel-dim); }
   .list :global(.item__actions) { display: grid; gap: 8px; justify-items: end; }
   .list :global(.tags) { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-  .list :global(.tag) {
-    font-style: normal; font-size: .8rem; font-weight: 600;
-    padding: 2px 8px; border-radius: 999px; background: rgba(255, 246, 229, .12);
-  }
+  .list :global(.tag) { font-style: normal; font-size: .8rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: rgba(255, 246, 229, .12); }
   .list :global(.tag--hot) { background: var(--fucsia); }
   .list :global(.empty) { color: var(--papel-dim); }
   @media (max-width: 480px) {
